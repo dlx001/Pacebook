@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="styleSheet" href="/styles.css">
+    <link rel="styleSheet" href="SignUpStyles.css">
     <title>SignUp</title>
 </head>
 <body>
@@ -37,26 +37,28 @@
         <div class="bodyContainer">
             <h1>Sign Up</h1>
             <p id="slogan"> It's free and always will be</p>
-            <form>
-            <input class='name' type="text" placeholder="First name">
-            <input class='name' type="text" placeholder="Surname">
-            <input type="text" placeholder="Email or mobile number">
-            <input type="text" placeholder="Re-enter email or mobile number">
-            <input type="text" placeholder="New Password">
-            <label for="birthday">Birthday</label>
-            <input type="date" id="Birthday">
-            <div class="genderSelector">
-                <div class="radio">
-                    <input type="radio" id="Female" name="gender">
-                    <label for="Female">Female</label>
-                </div>
-                <div class="radio"><input type="radio" id="Male" name="gender">
-                    <label for="Male">Male</label>
-                </div>
+            <form action="/" method="POST">
+                <input class='name' type="text" placeholder="First name" name="name">
+                <input class='name' type="text" placeholder="Surname" name="surname">
+                <input type="text" placeholder="Email or mobile number" name="email">
+                <input type="text" placeholder="Re-enter email or mobile number" name="reenter">
+                <input type="text" placeholder="New Password" name="password">
+                <label for="birthday">Birthday</label>
+                <input type="date" name="birthday"id="Birthday">
+                <div class="genderSelector">
+                    <div class="radio">
+                        <input type="radio" value="Female" id="Female" name="gender">
+                        <label for="Female">Female</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" value="Male" id="Male" name="gender">
+                        <label for="Male">Male</label>
+                    </div>
             </div>
-            </form>
             <p>By clicking Sign up, you agree to our Terms and that you have read our Data Use Policy, including our Cookie use</p>
             <button>Sign Up</button>
+            </form>
+            
         </div> 
     </div>
     <div class="footer"></div>>

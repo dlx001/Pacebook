@@ -14,7 +14,7 @@
     margin-top: 3vh;
     color: #e9ebee;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  
-    margin-right:60vh;
+    margin-right:51vh;
 }
 * {
     margin: 0;
@@ -31,6 +31,9 @@ input,label{
     margin:1.5px;
     color:#e9ebee;
     padding:1px;
+}
+input{
+    color:black;
 }
 input[type=text]{
     width:20vh;
@@ -82,6 +85,7 @@ img{
 ::placeholder{
     font-size: 20px;
 }
+
 .bodyContainer .name{
     width:24.5vh;
     display: inline-block;
