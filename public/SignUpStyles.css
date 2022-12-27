@@ -42,14 +42,13 @@ input[type=text]{
 .checkbox{
     display: inline;
 }
-.email{
-    display:inline-block;
-}
 .email, .password{
     margin:2vh 1vh ;
+    height:10vh;
 }
 .LoginFields{
     display:flex;
+    flex-direction: row;
 }
 .lightBlue{
     color:  #8297c4;

@@ -10,26 +10,21 @@
 <body>
     <div class="header"> 
         <h1>Pacebook</h1>
-        <div class="LoginFields">
-            <div class="email">
-                <form>
+        <div>
+            <form class="LoginFields" action="/profile" method="POST">
+                <div class="email">
                     <label for="userName">Email or Phone</label>
-                    <input type="text" id="'UserName">
-                    <div>
-                        <input class="checkbox" type="checkbox" id="loggedIn">
-                        <label id="blue" class="checkbox" for="loggedIn">Keep me logged in</label>
-                    </div>
-                </form>
-                
-            </div>
-            <div class="password">
-                <form>
+                    <input name="email" type="text" id="'UserName">
+                    <input class="checkbox" type="checkbox" id="loggedIn">
+                    <label id="blue" class="checkbox" for="loggedIn">Keep me logged in</label>
+                </div>
+                <div class="password">
                     <label for="password">Password</label>
-                    <input type="text" id="password">
+                    <input name="password" type="text" id="password">
                     <a class="lightBlue" href="/">Forgotten your password?</a>
-                </form> 
-            </div>
-            <button id="logInButton">Log In</button>
+                </div>
+                <button id="logInButton">Log In</button>
+            </form> 
         </div>
     </div>
     <div class="body">
