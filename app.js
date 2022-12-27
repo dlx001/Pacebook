@@ -1,5 +1,6 @@
 //create an express app
 const express = require("express");
+const bcrypt = require('bcryptjs');
 var flash = require('connect-flash');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -16,27 +17,23 @@ const dbLink="mongodb+srv://pacebook:test31415@cluster0.y7amop4.mongodb.net/Pace
 mongoose.connect(dbLink,{useNewURLParser: true, useUnifiedTopology: true}).then(()=>app.listen(3000));
 
 const app=express();
+
+
 app.set("view engine", "ejs");
-  passport.use(
-    new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    },
-    (username, password, done) => {
-        User.findOne({ email: username }, (err, user) => {
-        if (err) { 
-          return done(err);
-        }
-        if (!user) {
-          return done(null, false, { message: "Incorrect username" });
-        }
-        if (user.password !== password) {
-          return done(null, false, { message: "Incorrect password" });
-        }
-        return done(null, user);
+  passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+},(username, password, done) => {
+    User.findOne({ email: username }, (err, user) => {
+      if (err) return done(err);
+      if (!user) return done(null, false, { message: "Incorrect username" });
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (err) return done(err);
+        if (res) return done(null, user);
+        else return done(null, false, { message: "Incorrect password" });
       });
-    })
-  );
+    });
+  }));
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
@@ -129,20 +126,28 @@ app.post('/',
     ,(req,res)=>{
     const errors =validationResult(req);
     console.log(req.body);
+    
     if (!errors.isEmpty()) {
         console.log(errors.mapped());
     }
     else{
-        const user= new User({
-            FirstName: req.body.name,
-            Surname: req.body.surname,
-            email: req.body.email,
-            birthday: req.body.birthday,
-            gender: req.body.gender,
-            password: req.body.password
-        }).save(err=>{if(err){
-            return next(err)
-        }})
+        bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+            if(err){
+                console.log(err);
+            }
+            else{
+                const user= new User({
+                    FirstName: req.body.name,
+                    Surname: req.body.surname,
+                    email: req.body.email,
+                    birthday: req.body.birthday,
+                    gender: req.body.gender,
+                    password: hashedPassword
+                }).save(err=>{if(err){
+                    return next(err)
+                }})
+            }
+          });
         res.redirect("/");
     }
 });
