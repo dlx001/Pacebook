@@ -43,14 +43,14 @@ app.set("view engine", "ejs");
       done(err, user);
     });
   });
-
+ 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({
     extended: false
   }));
-
+  app.use(flash());
 
 
 
@@ -81,6 +81,7 @@ app.get('/', (req,res)=>{
 })
 
 app.get('/signUp', (req,res)=>{
+    req.flash("this is a test");
     res.render('signUp');
 })
 
@@ -128,7 +129,8 @@ app.post('/',
     console.log(req.body);
     
     if (!errors.isEmpty()) {
-        console.log(errors.mapped());
+      const alert = errors.array();
+      res.render('signUp',{alert});
     }
     else{
         bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
