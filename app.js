@@ -102,7 +102,13 @@ app.post('/',
     .withMessage("Name empty.")
     .isAlpha()
     .withMessage("Name must be alphabet letters."),
-    body("email").trim().isLength({min:1}).withMessage("Email empty").isEmail().withMessage("Must be an Email"),
+    body("email").trim().isLength({min:1}).withMessage("Email empty").isEmail().withMessage("Must be an Email").custom(value => {
+      return User.findOne({email: value}).then(user => {
+        if (user) {
+          return Promise.reject('E-mail already in use');
+        }
+      });
+    }),
     body("reenter").trim().isEmail().custom((value,{req}) => {
         if (value !== req.body.email) {
           throw new Error('Password confirmation does not match password');
