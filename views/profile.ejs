@@ -8,9 +8,29 @@
 </head>
 <body>
     <p>profile</p>
+    <a href="/profile/63b276e4c7139bbc2c87a7fd">Lin Profile</a>
     <% if (user) {%>
-        <h1>WELCOME BACK <%= user.email %></h1>
-        <a href="/logout">LOG OUT</a>
+        <% if(user.id==locals.owner.id){ %>
+            <form action=<%="/profile/"+ user.id %> method="POST">
+                <label for="relStatus">Relationship Status</label>
+                <select id="relStatus" name="relStatus">
+                <option value="Single">Single</option>
+                <option value="In a relationship">In a relationship</option>
+                <option value="Married">Married</option>
+                <option value="It's complicated">It's complicated</option>
+                </select>
+                <button> edit profile</button>
+            </form>
+        <% } %>
+        
+        <h1><%= user.FirstName+ " " + user.Surname %></h1>
+        <h1>Info</h1>
+        <h2>birthday <%= user.birthday %></h2>
+        <h2>gender <%= user.gender%></h2>
+        <% if(user.relStatus){ %>
+            <h2> Relationship Status <%= user.relStatus %></h2>
+        <%} %>
+        <a href="/auth/logout">LOG OUT</a>
       <% } %>
 </body>
 </html>

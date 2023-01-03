@@ -10,6 +10,9 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const { body, validationResult } = require("express-validator");
+const autho = require("./routes/auth");
+const profile=require("./routes/profile");
+
 
 
 mongoose.set('strictQuery', true)
@@ -44,118 +47,39 @@ app.set("view engine", "ejs");
     });
   });
  
+
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({
-    extended: false
+    extended: true
   }));
-  app.use(flash());
-
-
+  app.use(function(req, res, next) {
+    res.locals.owner = req.user;
+    next();
+  });
+  app.use('/auth',autho);
+  app.use('/profile',profile);
 
 //use ejs for view engine
 app.set('view engine', 'ejs');
-app.get("/logout", (req, res, next) => {
-    req.logout(function (err) {
-      if (err) {
-        return next(err);
-      }
-      res.redirect("/signup");
-    });
-  });
+
 
 //create public files to href css styles
 app.use(express.static('public'));
 
 //links
-app.post(
-    "/profile",
-      passport.authenticate("local", {
-      successRedirect: "/profile",  
-      failureRedirect: "/"
-    })
-);
+
 app.get('/', (req,res)=>{
     res.render('index');
 })
-
-app.get('/signUp', (req,res)=>{
-    req.flash("this is a test");
-    res.render('signUp');
+app.get('/404',(req,res)=>{
+  res.render('404');
 })
 
 
+
   app.get('/profile',(req,res)=>{
-    res.render('profile',{ user: req.user });
+    res.redirect(404);
   });
-app.post('/',
-    body("name")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("Name empty.")
-    .isAlpha()
-    .withMessage("Name must be alphabet letters."),
-    body("surname")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("Name empty.")
-    .isAlpha()
-    .withMessage("Name must be alphabet letters."),
-    body("email").trim().isLength({min:1}).withMessage("Email empty").isEmail().withMessage("Must be an Email").custom(value => {
-      return User.findOne({email: value}).then(user => {
-        if (user) {
-          return Promise.reject('E-mail already in use');
-        }
-      });
-    }),
-    body("reenter").trim().isEmail().custom((value,{req}) => {
-        if (value !== req.body.email) {
-          throw new Error('Password confirmation does not match password');
-        }
-        return true;
-      }),
-    body("password","password must be at least 8 characters long").isLength({min:8}),
-    body("birthday").isLength({min:1}).withMessage("Birthday empty").custom((value)=>{
-        var today = new Date();
-        var birthDate = new Date(value);
-        var age = today.getFullYear() - birthDate.getFullYear();
-        var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        if(age<12){
-            throw new Error("Must be at least 12 years old to make an account");
-        }
-        return true;
-    }),
-    body("gender","Must select a gender").isLength({min:1})
-    ,(req,res)=>{
-    const errors =validationResult(req);
-    console.log(req.body);
-    
-    if (!errors.isEmpty()) {
-      const alert = errors.array();
-      res.render('signUp',{alert});
-    }
-    else{
-        bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
-            if(err){
-                console.log(err);
-            }
-            else{
-                const user= new User({
-                    FirstName: req.body.name,
-                    Surname: req.body.surname,
-                    email: req.body.email,
-                    birthday: req.body.birthday,
-                    gender: req.body.gender,
-                    password: hashedPassword
-                }).save(err=>{if(err){
-                    return next(err)
-                }})
-            }
-          });
-        res.redirect("/");
-    }
-});
+
